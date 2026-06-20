@@ -1,36 +1,90 @@
 package cl.duoc.notificaciones.service;
 
+import cl.duoc.notificaciones.dto.NotificacionRequestDTO;
+import cl.duoc.notificaciones.dto.NotificacionResponseDTO;
 import cl.duoc.notificaciones.model.Notificacion;
 import cl.duoc.notificaciones.repository.NotificacionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class NotificacionService {
 
-    @Autowired
-    private NotificacionRepository repository;
+    private final NotificacionRepository repository;
 
-    public Notificacion guardarNotificacion(Notificacion notificacion) {
-        return repository.save(notificacion);
+    public NotificacionResponseDTO crearNotificacion(NotificacionRequestDTO dto) {
+
+        Notificacion notificacion = Notificacion.builder()
+                .usuarioId(dto.getUsuarioId())
+                .mensaje(dto.getMensaje())
+                .tipo(dto.getTipo())
+                .build();
+
+        return convertirDTO(repository.save(notificacion));
     }
 
-    public List<Notificacion> obtenerPorUsuario(Long usuarioId) {
-        return repository.findByUsuarioId(usuarioId);
+    public List<NotificacionResponseDTO> obtenerTodas() {
+        return repository.findAll()
+                .stream()
+                .map(this::convertirDTO)
+                .toList();
     }
 
-    public Optional<Notificacion> obtenerPorId(Long id) {
-        return repository.findById(id);
+    public NotificacionResponseDTO obtenerPorId(Long id) {
+
+        Notificacion notificacion = repository.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Notificación no encontrada"));
+
+        return convertirDTO(notificacion);
     }
 
-    public boolean existePorId(Long id) {
-        return repository.existsById(id);
+    public List<NotificacionResponseDTO> obtenerPorUsuario(Long usuarioId) {
+        return repository.findByUsuarioId(usuarioId)
+                .stream()
+                .map(this::convertirDTO)
+                .toList();
+    }
+
+    public List<NotificacionResponseDTO> obtenerNoLeidas(Long usuarioId) {
+        return repository.findByUsuarioIdAndLeida(usuarioId, false)
+                .stream()
+                .map(this::convertirDTO)
+                .toList();
+    }
+
+    public NotificacionResponseDTO marcarComoLeida(Long id) {
+
+        Notificacion notificacion = repository.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Notificación no encontrada"));
+
+        notificacion.setLeida(true);
+
+        return convertirDTO(repository.save(notificacion));
     }
 
     public void eliminarNotificacion(Long id) {
+
+        if (!repository.existsById(id)) {
+            throw new RuntimeException("Notificación no encontrada");
+        }
+
         repository.deleteById(id);
+    }
+
+    private NotificacionResponseDTO convertirDTO(Notificacion notificacion) {
+
+        return NotificacionResponseDTO.builder()
+                .id(notificacion.getId())
+                .usuarioId(notificacion.getUsuarioId())
+                .mensaje(notificacion.getMensaje())
+                .tipo(notificacion.getTipo())
+                .leida(notificacion.isLeida())
+                .fechaCreacion(notificacion.getFechaCreacion())
+                .build();
     }
 }
