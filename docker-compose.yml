@@ -1,0 +1,340 @@
+version: '3.8'
+
+services:
+  # =========================================================================
+  # 1. MICROSERVICIO: FAVORITOS
+  # =========================================================================
+  db-favoritos:
+    image: mysql:8.0
+    container_name: mysql_favoritos
+    environment:
+      MYSQL_ROOT_PASSWORD: clave_maestra_root
+      MYSQL_DATABASE: db_favoritos
+      MYSQL_USER: desarrollador
+      MYSQL_PASSWORD: password_seguro_123
+    ports:
+      - "3306:3306"
+    networks:
+      - red_interna_proyecto
+    volumes:
+      - persistencia_db_favoritos:/var/lib/mysql
+
+  api-favoritos:
+    image: maven:3.9-eclipse-temurin-21
+    container_name: api_favoritos
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db-favoritos
+    networks:
+      - red_interna_proyecto
+    command: tail -f /dev/null
+    volumes:
+      - ./codigo-fuente/api_favoritos:/app
+    working_dir: /app
+
+  # =========================================================================
+  # 2. MICROSERVICIO: CATÁLOGO
+  # =========================================================================
+  db-catalogo:
+    image: mysql:8.0
+    container_name: mysql_catalogo
+    environment:
+      MYSQL_ROOT_PASSWORD: clave_maestra_root
+      MYSQL_DATABASE: db_catalogo
+      MYSQL_USER: desarrollador
+      MYSQL_PASSWORD: password_seguro_123
+    ports:
+      - "3307:3306"
+    networks:
+      - red_interna_proyecto
+    volumes:
+      - persistencia_db_catalogo:/var/lib/mysql
+
+  api-catalogo:
+    image: maven:3.9-eclipse-temurin-21
+    container_name: api_catalogo
+    ports:
+      - "8081:8081"
+    depends_on:
+      - db-catalogo
+    networks:
+      - red_interna_proyecto
+    command: tail -f /dev/null
+    volumes:
+      - ./codigo-fuente/api_catalogo:/app
+    working_dir: /app
+
+  # =========================================================================
+  # 3. MICROSERVICIO: REGISTRO / USUARIOS
+  # =========================================================================
+  db-registro:
+    image: mysql:8.0
+    container_name: mysql_registro
+    environment:
+      MYSQL_ROOT_PASSWORD: clave_maestra_root
+      MYSQL_DATABASE: db_registro
+      MYSQL_USER: desarrollador
+      MYSQL_PASSWORD: password_seguro_123
+    ports:
+      - "3308:3306"
+    networks:
+      - red_interna_proyecto
+    volumes:
+      - persistencia_db_registro:/var/lib/mysql
+
+  api-registro:
+    image: maven:3.9-eclipse-temurin-21
+    container_name: api_registro
+    ports:
+      - "8082:8082"
+    depends_on:
+      - db-registro
+    networks:
+      - red_interna_proyecto
+    command: tail -f /dev/null
+    volumes:
+      - ./codigo-fuente/api_registro:/app
+    working_dir: /app
+
+  # =========================================================================
+  # 4. MICROSERVICIO: CARRITO
+  # =========================================================================
+  db-carrito:
+    image: mysql:8.0
+    container_name: mysql_carrito
+    environment:
+      MYSQL_ROOT_PASSWORD: clave_maestra_root
+      MYSQL_DATABASE: db_carrito
+      MYSQL_USER: desarrollador
+      MYSQL_PASSWORD: password_seguro_123
+    ports:
+      - "3309:3306"
+    networks:
+      - red_interna_proyecto
+    volumes:
+      - persistencia_db_carrito:/var/lib/mysql
+
+  api-carrito:
+    image: maven:3.9-eclipse-temurin-21
+    container_name: api_carrito
+    ports:
+      - "8084:8084"
+    depends_on:
+      - db-carrito
+    networks:
+      - red_interna_proyecto
+    command: tail -f /dev/null
+    volumes:
+      - ./codigo-fuente/api_carrito:/app
+    working_dir: /app
+
+  # =========================================================================
+  # 5. MICROSERVICIO: NOTIFICACIONES
+  # =========================================================================
+  db-notificaciones:
+    image: mysql:8.0
+    container_name: mysql_notificaciones
+    environment:
+      MYSQL_ROOT_PASSWORD: clave_maestra_root
+      MYSQL_DATABASE: db_notificaciones
+      MYSQL_USER: desarrollador
+      MYSQL_PASSWORD: password_seguro_123
+    ports:
+      - "3310:3306"
+    networks:
+      - red_interna_proyecto
+    volumes:
+      - persistencia_db_notificaciones:/var/lib/mysql
+
+  api-notificaciones:
+    image: maven:3.9-eclipse-temurin-21
+    container_name: api_notificaciones
+    ports:
+      - "8085:8085"
+    depends_on:
+      - db-notificaciones
+    networks:
+      - red_interna_proyecto
+    command: tail -f /dev/null
+    volumes:
+      - ./codigo-fuente/api_notificaciones:/app
+    working_dir: /app
+
+  # =========================================================================
+  # 6. MICROSERVICIO: DESCUENTOS / CUPONES
+  # =========================================================================
+  db-descuentos:
+    image: mysql:8.0
+    container_name: mysql_descuentos
+    environment:
+      MYSQL_ROOT_PASSWORD: clave_maestra_root
+      MYSQL_DATABASE: db_descuentos
+      MYSQL_USER: desarrollador
+      MYSQL_PASSWORD: password_seguro_123
+    ports:
+      - "3311:3306"
+    networks:
+      - red_interna_proyecto
+    volumes:
+      - persistencia_db_descuentos:/var/lib/mysql
+
+  api-descuentos:
+    image: maven:3.9-eclipse-temurin-21
+    container_name: api_descuentos
+    ports:
+      - "8086:8086"
+    depends_on:
+      - db-descuentos
+    networks:
+      - red_interna_proyecto
+    command: tail -f /dev/null
+    volumes:
+      - ./codigo-fuente/api_descuentos:/app
+    working_dir: /app
+
+  # =========================================================================
+  # 7. MICROSERVICIO: VENTAS
+  # =========================================================================
+  db-ventas:
+    image: mysql:8.0
+    container_name: mysql_ventas
+    environment:
+      MYSQL_ROOT_PASSWORD: clave_maestra_root
+      MYSQL_DATABASE: db_ventas
+      MYSQL_USER: desarrollador
+      MYSQL_PASSWORD: password_seguro_123
+    ports:
+      - "3312:3306"
+    networks:
+      - red_interna_proyecto
+    volumes:
+      - persistencia_db_ventas:/var/lib/mysql
+
+  api-ventas:
+    image: maven:3.9-eclipse-temurin-21
+    container_name: api_ventas
+    ports:
+      - "8087:8087"
+    depends_on:
+      - db-ventas
+    networks:
+      - red_interna_proyecto
+    command: tail -f /dev/null
+    volumes:
+      - ./codigo-fuente/api_ventas:/app
+    working_dir: /app
+
+  # =========================================================================
+  # 8. MICROSERVICIO: PAGOS
+  # =========================================================================
+  db-pagos:
+    image: mysql:8.0
+    container_name: mysql_pagos
+    environment:
+      MYSQL_ROOT_PASSWORD: clave_maestra_root
+      MYSQL_DATABASE: db_pagos
+      MYSQL_USER: desarrollador
+      MYSQL_PASSWORD: password_seguro_123
+    ports:
+      - "3313:3306"
+    networks:
+      - red_interna_proyecto
+    volumes:
+      - persistencia_db_pagos:/var/lib/mysql
+
+  api-pagos:
+    image: maven:3.9-eclipse-temurin-21
+    container_name: api_pagos
+    ports:
+      - "8088:8088"
+    depends_on:
+      - db-pagos
+    networks:
+      - red_interna_proyecto
+    command: tail -f /dev/null
+    volumes:
+      - ./codigo-fuente/api_pagos:/app
+    working_dir: /app
+
+  # =========================================================================
+  # 9. MICROSERVICIO: ÓRDENES
+  # =========================================================================
+  db-ordenes:
+    image: mysql:8.0
+    container_name: mysql_ordenes
+    environment:
+      MYSQL_ROOT_PASSWORD: clave_maestra_root
+      MYSQL_DATABASE: db_ordenes
+      MYSQL_USER: desarrollador
+      MYSQL_PASSWORD: password_seguro_123
+    ports:
+      - "3314:3306"
+    networks:
+      - red_interna_proyecto
+    volumes:
+      - persistencia_db_ordenes:/var/lib/mysql
+
+  api-ordenes:
+    image: maven:3.9-eclipse-temurin-21
+    container_name: api_ordenes
+    ports:
+      - "8089:8089"
+    depends_on:
+      - db-ordenes
+    networks:
+      - red_interna_proyecto
+    command: tail -f /dev/null
+    volumes:
+      - ./codigo-fuente/api_ordenes:/app
+    working_dir: /app
+
+  # =========================================================================
+  # 10. MICROSERVICIO: ENVÍOS
+  # =========================================================================
+  db-envios:
+    image: mysql:8.0
+    container_name: mysql_envios
+    environment:
+      MYSQL_ROOT_PASSWORD: clave_maestra_root
+      MYSQL_DATABASE: db_envios
+      MYSQL_USER: desarrollador
+      MYSQL_PASSWORD: password_seguro_123
+    ports:
+      - "3315:3306"
+    networks:
+      - red_interna_proyecto
+    volumes:
+      - persistencia_db_envios:/var/lib/mysql
+
+  api-envios:
+    image: maven:3.9-eclipse-temurin-21
+    container_name: api_envios
+    ports:
+      - "8090:8090"
+    depends_on:
+      - db-envios
+    networks:
+      - red_interna_proyecto
+    command: tail -f /dev/null
+    volumes:
+      - ./codigo-fuente/api_envios:/app
+    working_dir: /app
+
+# =========================================================================
+# CONFIGURACIÓN DE RED Y VOLÚMENES GLOBALES
+# =========================================================================
+networks:
+  red_interna_proyecto:
+
+volumes:
+  persistencia_db_favoritos:
+  persistencia_db_catalogo:
+  persistencia_db_registro:
+  persistencia_db_carrito:
+  persistencia_db_notificaciones:
+  persistencia_db_descuentos:
+  persistencia_db_ventas:
+  persistencia_db_pagos:
+  persistencia_db_ordenes:
+  persistencia_db_envios:
